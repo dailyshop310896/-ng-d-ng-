@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <script>
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var storedFetch = originalFetch;
+
+          // Define getter and setter on window and Window.prototype
+          var defineFetch = function(target) {
+            try {
+              var desc = Object.getOwnPropertyDescriptor(target, 'fetch');
+              if (!desc || !desc.set || !desc.writable) {
+                Object.defineProperty(target, 'fetch', {
+                  configurable: true,
+                  enumerable: true,
+                  get: function() { return storedFetch; },
+                  set: function(val) { storedFetch = val; }
+                });
+                return true;
+              }
+            } catch (err) {}
+            return false;
+          };
+
+          if (!defineFetch(window)) {
+            if (typeof Window !== 'undefined' && Window.prototype) {
+              defineFetch(Window.prototype);
+            }
+          }
+        } catch (e) {}
+
+        // Global uncaught error suppressor for third-party script setter conflicts
+        var prevOnError = window.onerror;
+        window.onerror = function(message, source, lineno, colno, error) {
+          var msg = (typeof message === 'string' ? message : '') + (error && error.message ? error.message : '');
+          if (msg.indexOf('fetch') !== -1 && msg.indexOf('getter') !== -1) {
+            return true; // suppresses uncaught error
+          }
+          if (msg.indexOf('adsbygoogle') !== -1 || msg.indexOf('TagError') !== -1) {
+            return true;
+          }
+          if (prevOnError) {
+            return prevOnError.apply(this, arguments);
+          }
+          return false;
+        };
+
+        window.addEventListener('error', function(event) {
+          var msg = (event && event.message) || '';
+          if ((msg.indexOf('fetch') !== -1 && msg.indexOf('getter') !== -1) ||
+              msg.indexOf('adsbygoogle') !== -1 ||
+              msg.indexOf('TagError') !== -1) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return true;
+          }
+        }, true);
+      })();
+    </script>
+    <title>Công Tắc Màn Hình</title>
+    <meta name="description" content="Ứng dụng bật tắt đèn màn hình thay nút nguồn vật lý, phát nhạc dưới nền khi tắt màn hình để tiết kiệm pin, hỗ trợ màn hình đen OLED và chạm 2 lần mở khóa." />
+    <meta property="og:title" content="Công Tắc Màn Hình" />
+    <meta property="og:description" content="Ứng dụng bật tắt đèn màn hình thay nút nguồn vật lý, phát nhạc dưới nền khi tắt màn hình để tiết kiệm pin, hỗ trợ màn hình đen OLED và chạm 2 lần mở khóa." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#090a0f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Tắt Màn Hình" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

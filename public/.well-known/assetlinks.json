@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.congtacmanhinh.app",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:7C:0F:CD:CF:06:EB:83:A8:65:94:D0:33:42:27:2C:1E:81:4B:28:3E:F9:6E:9B:6C:54:E6:35:86:14"
+      ]
+    }
+  }
+]

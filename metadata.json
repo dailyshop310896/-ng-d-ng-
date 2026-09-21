@@ -1,0 +1,10 @@
+{
+  "name": "Công Tắc Màn Hình",
+  "description": "Ứng dụng bật tắt đèn màn hình thay nút nguồn vật lý, phát nhạc dưới nền khi tắt màn hình để tiết kiệm pin, hỗ trợ màn hình đen OLED và chạm 2 lần mở khóa.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
